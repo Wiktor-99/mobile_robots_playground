@@ -1,0 +1,3 @@
+[submodule "src/lidarslam_ros2"]
+	path = src/lidarslam_ros2
+	url = git@github.com:rsasaki0109/lidarslam_ros2.git
