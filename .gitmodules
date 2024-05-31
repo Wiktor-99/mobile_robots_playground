@@ -1,3 +1,6 @@
 [submodule "src/lidarslam_ros2"]
 	path = src/lidarslam_ros2
 	url = git@github.com:rsasaki0109/lidarslam_ros2.git
+[submodule "src/RGLGazeboPlugin"]
+	path = src/RGLGazeboPlugin
+	url = git@github.com:Wiktor-99/RGLGazeboPlugin.git
