@@ -16,6 +16,7 @@
 
     <xacro:property name="caster_xoff" value="0.15" />
     <xacro:property name="caster_mass" value="0.10" />
+    <xacro:property name="lidar_zoff" value="0.03" />
 
     <link name="base_footprint" />
 
@@ -74,7 +75,7 @@
 
     <ros2_control name="IgnitionSystem" type="system">
         <hardware>
-        <plugin>ign_ros2_control/IgnitionSystem</plugin>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
         </hardware>
         <joint name="drivewhl_l_joint">
         <command_interface name="velocity">
@@ -95,7 +96,7 @@
     </ros2_control>
 
     <gazebo>
-        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
             <parameters>$(find diffdrive_bringup)/config/controllers.yaml</parameters>
             <ros>
                 <remapping>/diff_drive_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
@@ -126,11 +127,6 @@
         <child link="front_caster" />
         <origin xyz="${caster_xoff} 0.0 ${-(base_height/2)}" rpy="0 0 0" />
     </joint>
-
-    <gazebo reference="front_caster">
-        <mu>0.001</mu>
-        <mu2>0.001</mu2>
-    </gazebo>
 
     <link name="imu_link">
         <visual>
@@ -163,5 +159,50 @@
             <topic>imu</topic>
             <gz_frame_id>imu_link</gz_frame_id>
         </sensor>
+    </gazebo>
+
+    <link name="lidar_link">
+        <visual>
+            <geometry>
+                <box size="0.05 0.05 0.05" />
+            </geometry>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="0.05 0.05 0.05" />
+            </geometry>
+        </collision>
+        <xacro:box_inertia m="0.1" w="0.1" d="0.1" h="0.1" />
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="lidar_link" />
+        <origin xyz="0 0 ${base_height/2 + lidar_zoff}" />
+    </joint>
+
+    <gazebo reference="lidar_link">
+    <sensor name="RGLLidar" type="custom">
+        <plugin filename="RGLServerPluginInstance" name="rgl::RGLServerPluginInstance">
+            <range>245</range>
+            <update_rate>20</update_rate>
+            <update_on_paused_sim>false</update_on_paused_sim>
+            <topic>lidar</topic>
+            <frame>lidar_link</frame>
+            <pattern_uniform>
+                <horizontal>
+                <samples>1800</samples>
+                <min_angle>-3.14159</min_angle>
+                <max_angle>3.14159</max_angle>
+                </horizontal>
+                <vertical>
+                <samples>128</samples>
+                <min_angle>-0.436332</min_angle>
+                <max_angle>0.261799</max_angle>
+                </vertical>
+            </pattern_uniform>
+        </plugin>
+    </sensor>
     </gazebo>
 </robot>
