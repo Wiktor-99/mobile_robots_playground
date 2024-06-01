@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='ASCII'?>
 <sdf version='1.7'>
   <world name='world_demo'>
+    <plugin filename="RGLServerPluginManager" name="rgl::RGLServerPluginManager"/>
     <physics name='1ms' type='ignored'>
       <max_step_size>0.01</max_step_size>
       <real_time_factor>1</real_time_factor>
