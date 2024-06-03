@@ -1,14 +1,16 @@
 <?xml version='1.0' encoding='ASCII'?>
-<sdf version='1.7'>
+<sdf version='1.8'>
   <world name='world_demo'>
-    <plugin filename="RGLServerPluginManager" name="rgl::RGLServerPluginManager"/>
-    <physics name='1ms' type='ignored'>
-      <max_step_size>0.01</max_step_size>
-      <real_time_factor>1</real_time_factor>
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
     </physics>
-    <plugin name='ignition::gazebo::systems::Physics' filename='libignition-gazebo-physics-system.so'/>
-    <plugin name='ignition::gazebo::systems::UserCommands' filename='libignition-gazebo-user-commands-system.so'/>
-    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='libignition-gazebo-scene-broadcaster-system.so'/>
+    <plugin filename="RGLServerPluginManager" name="rgl::RGLServerPluginManager"/>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+
     <scene>
       <ambient>1 1 1 1</ambient>
       <background>0.3 0.7 0.9 1</background>
