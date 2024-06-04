@@ -191,14 +191,14 @@
                 <frame>lidar_link</frame>
                 <pattern_uniform>
                     <horizontal>
-                        <samples>1000</samples>
+                        <samples>600</samples>
                         <min_angle>-3.14159</min_angle>
                         <max_angle>3.14159</max_angle>
                     </horizontal>
                     <vertical>
-                        <samples>800</samples>
-                        <min_angle>-0.5</min_angle>
-                        <max_angle>0.5</max_angle>
+                        <samples>600</samples>
+                        <min_angle>-0.4</min_angle>
+                        <max_angle>0.4</max_angle>
                     </vertical>
                 </pattern_uniform>
             </plugin>
