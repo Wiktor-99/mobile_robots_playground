@@ -82,7 +82,7 @@ def generate_launch_description():
         output="screen",
     )
 
-    load_joint_trajectory_controller = ExecuteProcess(
+    load_diff_drive_controller = ExecuteProcess(
         name="activate_diff_drive_controller",
         cmd=[ "ros2", "control", "load_controller", "--set-state", "active", "diff_drive_controller"],
         shell=False,
@@ -98,6 +98,6 @@ def generate_launch_description():
             robot_state_publisher,
             robot_localization_node,
             load_joint_state_controller,
-            load_joint_trajectory_controller,
+            load_diff_drive_controller,
             rviz2
         ])
