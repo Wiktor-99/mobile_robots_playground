@@ -44,10 +44,10 @@ ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ENV GZ_VERSION=harmonic
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    mkdir -p ${WORKSPACE}/gz_ros2_control_ws/src && \
-    cd ${WORKSPACE}/gz_ros2_control_ws/src && \
+    mkdir -p /gz_ros2_control_ws/src && \
+    cd /gz_ros2_control_ws/src && \
     git clone --branch iron https://github.com/ros-controls/gz_ros2_control && \
-    cd ${WORKSPACE}/gz_ros2_control_ws && \
+    cd /gz_ros2_control_ws && \
     colcon build
 
 ENV DEBIAN_FRONTEND=dialog
@@ -56,4 +56,4 @@ ARG WORKSPACE
 RUN echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
     && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
     && echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc \
-    && echo "if [ -f ${WORKSPACE}/gz_ros2_control_ws/install/setup.bash ]; then source ${WORKSPACE}/gz_ros2_control_ws/install/setup.bash; fi" >> /home/ros/.bashrc
+    && echo "if [ -f /gz_ros2_control_ws/install/setup.bash ]; then source /gz_ros2_control_ws/install/setup.bash; fi" >> /home/ros/.bashrc
