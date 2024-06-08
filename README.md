@@ -49,3 +49,7 @@ To save the map use:
 ```
 ros2 service call /map_save std_srvs/Empty
 ```
+
+## Results of mapping with lidar slam
+
+![Input point cloud from the RGLPlugin](/img/map_in_rviz.png " ") ![The map](/img/map_pcl.png " ")
