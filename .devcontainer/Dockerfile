@@ -55,5 +55,5 @@ ENV DEBIAN_FRONTEND=dialog
 ARG WORKSPACE
 RUN echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
     && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
-    && echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc \
-    && echo "if [ -f /gz_ros2_control_ws/install/setup.bash ]; then source /gz_ros2_control_ws/install/setup.bash; fi" >> /home/ros/.bashrc
+    && echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> //home/$USERNAME/.bashrc \
+    && echo "if [ -f /gz_ros2_control_ws/install/setup.bash ]; then source /gz_ros2_control_ws/install/setup.bash; fi" >> //home/$USERNAME/.bashrc
