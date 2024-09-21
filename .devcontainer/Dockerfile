@@ -4,21 +4,16 @@ ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+ENV SHELL /bin/bash
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip
-ENV DEBIAN_FRONTEND=dialog
-ENV SHELL /bin/bash
 
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get install -y python3-pip lsb-release wget gnupg
 
-RUN apt-get update && \
-    sudo apt-get install -y lsb-release wget gnupg
-
-ENV DEBIAN_FRONTEND=noninteractive
 RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
     apt-get update --fix-missing \
@@ -38,8 +33,6 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
-ENV GZ_VERSION=harmonic
 ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ENV GZ_VERSION=harmonic
@@ -49,7 +42,6 @@ RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     git clone --branch iron https://github.com/ros-controls/gz_ros2_control && \
     cd /gz_ros2_control_ws && \
     colcon build
-
 ENV DEBIAN_FRONTEND=dialog
 
 ARG WORKSPACE
