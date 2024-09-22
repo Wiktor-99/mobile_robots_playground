@@ -1,0 +1,934 @@
+<sdf version='1.10'>
+  <world name='default'>
+    <physics name='4ms' type='ignored'>
+      <max_step_size>0.0040000000000000001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system'/>
+    <plugin name='gz::sim::systems::UserCommands' filename='gz-sim-user-commands-system'/>
+    <plugin name='gz::sim::systems::SceneBroadcaster' filename='gz-sim-scene-broadcaster-system'/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>0.800000012 0.800000012 0.800000012 1</background>
+      <shadows>true</shadows>
+    </scene>
+    <gui fullscreen='false'>
+      <plugin name='3D View' filename='MinimalScene'>
+        <gz-gui>
+          <title>3D View</title>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property type='string' key='state'>docked</property>
+        </gz-gui>
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>-6 0 6 0 0.5 0</camera_pose>
+      </plugin>
+      <plugin name='Entity context menu' filename='EntityContextMenuPlugin'>
+        <gz-gui>
+          <property key='state' type='string'>floating</property>
+          <property key='width' type='double'>5</property>
+          <property key='height' type='double'>5</property>
+          <property key='showTitleBar' type='bool'>false</property>
+        </gz-gui>
+      </plugin>
+      <plugin name='Scene Manager' filename='GzSceneManager'>
+        <gz-gui>
+          <property key='resizable' type='bool'>false</property>
+          <property key='width' type='double'>5</property>
+          <property key='height' type='double'>5</property>
+          <property key='state' type='string'>floating</property>
+          <property key='showTitleBar' type='bool'>false</property>
+        </gz-gui>
+      </plugin>
+      <plugin name='Interactive view control' filename='InteractiveViewControl'>
+        <gz-gui>
+          <property key='resizable' type='bool'>false</property>
+          <property key='width' type='double'>5</property>
+          <property key='height' type='double'>5</property>
+          <property key='state' type='string'>floating</property>
+          <property key='showTitleBar' type='bool'>false</property>
+        </gz-gui>
+      </plugin>
+      <plugin name='Camera Tracking' filename='CameraTracking'>
+        <gz-gui>
+          <property key='resizable' type='bool'>false</property>
+          <property key='width' type='double'>5</property>
+          <property key='height' type='double'>5</property>
+          <property key='state' type='string'>floating</property>
+          <property key='showTitleBar' type='bool'>false</property>
+        </gz-gui>
+      </plugin>
+      <plugin name='World control' filename='WorldControl'>
+        <gz-gui>
+          <title>World control</title>
+          <property type='bool' key='showTitleBar'>0</property>
+          <property type='bool' key='resizable'>0</property>
+          <property type='double' key='height'>72</property>
+          <property type='double' key='z'>1</property>
+          <property type='string' key='state'>floating</property>
+          <anchors target='3D View'>
+            <line own='left' target='left'/>
+            <line own='bottom' target='bottom'/>
+          </anchors>
+        </gz-gui>
+        <play_pause>1</play_pause>
+        <step>1</step>
+        <start_paused>1</start_paused>
+      </plugin>
+      <plugin name='World stats' filename='WorldStats'>
+        <gz-gui>
+          <title>World stats</title>
+          <property type='bool' key='showTitleBar'>0</property>
+          <property type='bool' key='resizable'>0</property>
+          <property type='double' key='height'>110</property>
+          <property type='double' key='width'>290</property>
+          <property type='double' key='z'>1</property>
+          <property type='string' key='state'>floating</property>
+          <anchors target='3D View'>
+            <line own='right' target='right'/>
+            <line own='bottom' target='bottom'/>
+          </anchors>
+        </gz-gui>
+        <sim_time>1</sim_time>
+        <real_time>1</real_time>
+        <real_time_factor>1</real_time_factor>
+        <iterations>1</iterations>
+      </plugin>
+      <plugin name='Transform control' filename='TransformControl'>
+        <gz-gui>
+          <title>Transform control</title>
+          <anchors target='3D View'>
+            <line own='left' target='left'/>
+            <line own='top' target='top'/>
+          </anchors>
+          <property key='resizable' type='bool'>0</property>
+          <property key='width' type='double'>230</property>
+          <property key='height' type='double'>50</property>
+          <property key='state' type='string'>floating</property>
+          <property key='showTitleBar' type='bool'>0</property>
+          <property key='cardBackground' type='string'>#666666</property>
+        </gz-gui>
+      </plugin>
+      <plugin name='Shapes' filename='Shapes'>
+        <gz-gui>
+          <anchors target='Transform control'>
+            <line own='left' target='right'/>
+            <line own='top' target='top'/>
+          </anchors>
+          <property key='resizable' type='bool'>0</property>
+          <property key='width' type='double'>200</property>
+          <property key='height' type='double'>50</property>
+          <property key='state' type='string'>floating</property>
+          <property key='showTitleBar' type='bool'>0</property>
+          <property key='cardBackground' type='string'>#666666</property>
+        </gz-gui>
+      </plugin>
+      <plugin name='Key publisher' filename='KeyPublisher'>
+        <gz-gui>
+          <anchors target='3D View'>
+            <line own='right' target='right'/>
+            <line own='top' target='top'/>
+          </anchors>
+          <property key='resizable' type='bool'>false</property>
+          <property key='width' type='double'>5</property>
+          <property key='height' type='double'>5</property>
+          <property key='state' type='string'>floating</property>
+          <property key='showTitleBar' type='bool'>false</property>
+        </gz-gui>
+      </plugin>
+    </gui>
+    <gravity>0 0 -9.8000000000000007</gravity>
+    <magnetic_field>6.0000000000000002e-06 2.3e-05 -4.1999999999999998e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.800000012 0.800000012 0.800000012 1</ambient>
+            <diffuse>0.800000012 0.800000012 0.800000012 1</diffuse>
+            <specular>0.800000012 0.800000012 0.800000012 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 0 0 0 0 0</pose>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='stairs_very_simple'>
+      <pose>7 0 0 0 0 1.5708000000000006</pose>
+      <link name='Stairs_3'>
+        <visual name='Stairs_3_Visual_0'>
+          <pose>0 1.6625000000000001 0.037499999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_0'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 1.6625000000000001 0.037499999999999999 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_1'>
+          <pose>0 1.4875 0.1125 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_1'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 1.4875 0.1125 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_2'>
+          <pose>0 1.3125 0.1875 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_2'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 1.3125 0.1875 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_3'>
+          <pose>0 1.1375 0.26250000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_3'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 1.1375 0.26250000000000001 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_4'>
+          <pose>0 0.96250000000000002 0.33750000000000002 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_4'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 0.96250000000000002 0.33750000000000002 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_5'>
+          <pose>0 0.78749999999999998 0.41249999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_5'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 0.78749999999999998 0.41249999999999998 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_6'>
+          <pose>0 0.61250000000000004 0.48749999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_6'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 0.61250000000000004 0.48749999999999999 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_7'>
+          <pose>0 0.4375 0.5625 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_7'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 0.4375 0.5625 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_8'>
+          <pose>0 0.26250000000000001 0.63749999999999996 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_8'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 0.26250000000000001 0.63749999999999996 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_9'>
+          <pose>0 0.087499999999999994 0.71250000000000002 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_9'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 0.087499999999999994 0.71250000000000002 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_10'>
+          <pose>0 -0.087499999999999994 0.78749999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_10'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -0.087499999999999994 0.78749999999999998 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_11'>
+          <pose>0 -0.26250000000000001 0.86250000000000004 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_11'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -0.26250000000000001 0.86250000000000004 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_12'>
+          <pose>0 -0.4375 0.9375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_12'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -0.4375 0.9375 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_13'>
+          <pose>0 -0.61250000000000004 1.0125 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_13'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -0.61250000000000004 1.0125 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_14'>
+          <pose>0 -0.78749999999999998 1.0874999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_14'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -0.78749999999999998 1.0874999999999999 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_15'>
+          <pose>0 -0.96250000000000002 1.1625000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_15'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -0.96250000000000002 1.1625000000000001 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_16'>
+          <pose>0 -1.1375 1.2375 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_16'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -1.1375 1.2375 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_17'>
+          <pose>0 -1.3125 1.3125 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_17'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -1.3125 1.3125 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_18'>
+          <pose>0 -1.4875 1.3875 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_18'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -1.4875 1.3875 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='Stairs_3_Visual_19'>
+          <pose>0 -1.6625000000000001 1.4624999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+          <meta>
+            <layer>0</layer>
+          </meta>
+        </visual>
+        <collision name='Stairs_3_Collision_19'>
+          <geometry>
+            <box>
+              <size>1 0.17499999999999999 0.074999999999999997</size>
+            </box>
+          </geometry>
+          <pose>0 -1.6625000000000001 1.4624999999999999 0 0 0</pose>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>true</static>
+      <self_collide>false</self_collide>
+    </model>
+      <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet11</name>
+      <pose>-0.5 0 0.071999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet21</name>
+      <pose>-1.25 0.0000000000010654 0.21999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet31</name>
+      <pose>-2.0 0.0000000000010654 0.35999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet41</name>
+      <pose>-2.75 0.0000000000010654 0.47999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+    </include>
+    <model name='box_obstacle'>
+      <static>true</static>
+      <pose>2 2 0.028000000000000001 1.7821 5.5511151231257827e-17 1.5708000000000002</pose>
+      <link name='box'>
+        <collision name='box_collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.84999999999999998 0.14999999999999999 0.5</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+              </ode>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='box_visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.84999999999999998 0.14999999999999999 0.5</size>
+            </box>
+          </geometry>
+	  <material>
+            <ambient> .6 .6 .6  1.0</ambient>
+            <diffuse> .7 .7 .7  1.0</diffuse>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <self_collide>false</self_collide>
+    </model>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet</name>
+      <pose>1.9999999999973956 -2.0000000000010654 0.071999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet2</name>
+      <pose>1.9999999999973956 -3.0000000000010654 0.21999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet3</name>
+      <pose>1.9999999999973956 -4.0000000000010654 0.35999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet</uri>
+      <name>pallet4</name>
+      <pose>1.9999999999973956 -5.0000000000010654 0.47999119761240835 1.4784993654042191e-11 -3.6185579767245885e-11 -1.0298259296800602e-16</pose>
+      <static>true</static>
+    </include>
+    <light name='sun' type='directional'>
+      <pose>0 0 10 0 0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1</intensity>
+      <direction>-0.5 0.10000000000000001 -0.90000000000000002</direction>
+      <diffuse>0.800000012 0.800000012 0.800000012 1</diffuse>
+      <specular>0.800000012 0.800000012 0.800000012 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <linear>0.0099999997764825821</linear>
+        <constant>0.89999997615814209</constant>
+        <quadratic>0.0010000000474974513</quadratic>
+      </attenuation>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <include>
+	<pose>3.0 0.0 0.01 0.0 0.0 0.0</pose>
+	<uri>https://fuel.gazebosim.org/1.0/hexarotor/models/grasspatch	</uri>
+    </include>
+  </world>
+</sdf>
