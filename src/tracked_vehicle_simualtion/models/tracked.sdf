@@ -438,9 +438,18 @@
         <kinematic>false</kinematic>
         <enable_wind>false</enable_wind>
       </link>
-      <joint name='front_left_flipper_j' type='fixed'>
+      <joint name='front_left_flipper_j' type='revolute'>
         <child>front_left_flipper</child>
         <parent>left_track</parent>
+        <pose>0 0 0 0 0 0</pose>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>inf</effort>
+          </limit>
+        </axis>
         <pose>0 0 0 0 0 0</pose>
       </joint>
       <link name='rear_left_flipper'>
@@ -617,37 +626,18 @@
         <kinematic>false</kinematic>
         <enable_wind>false</enable_wind>
       </link>
-      <joint name='rear_left_flipper_j' type='fixed'>
+      <joint name='rear_left_flipper_j' type='revolute'>
         <child>rear_left_flipper</child>
         <parent>left_track</parent>
         <axis>
-          <xyz>2.3287441290566332e-06 0.99999999998958267 3.9257885092516563e-06</xyz>
+          <xyz>0 1 0</xyz>
           <limit>
             <lower>0</lower>
             <upper>0</upper>
             <effort>inf</effort>
-            <velocity>inf</velocity>
-            <stiffness>100000000</stiffness>
-            <dissipation>1</dissipation>
           </limit>
-          <dynamics>
-            <spring_reference>0</spring_reference>
-            <spring_stiffness>0</spring_stiffness>
-            <damping>0</damping>
-            <friction>0</friction>
-          </dynamics>
         </axis>
-        <physics>
-          <ode>
-            <implicit_spring_damper>true</implicit_spring_damper>
-            <cfm_damping>true</cfm_damping>
-            <limit>
-              <cfm>0</cfm>
-              <erp>0.20000000000000001</erp>
-            </limit>
-          </ode>
-        </physics>
-        <pose>1.6653299999999999e-16 0 1.3877799999999999e-17 3.2731500000000002e-40 6.1828099999999997e-18 1.05879e-22</pose>
+        <pose>0 0 0 0 0 0</pose>
       </joint>
       <link name='front_right_flipper'>
         <pose>0.24999999999999911 -0.27199999999999996 0.019500000000000017 3.1415899999999999 0.49999999999963862 3.1415899999999999</pose>
@@ -823,9 +813,17 @@
         <kinematic>false</kinematic>
         <enable_wind>false</enable_wind>
       </link>
-      <joint name='front_right_flipper_j' type='fixed'>
+      <joint name='front_right_flipper_j' type='revolute'>
         <child>front_right_flipper</child>
         <parent>right_track</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>inf</effort>
+          </limit>
+        </axis>
         <pose>0 0 0 0 0 0</pose>
       </joint>
       <link name='rear_right_flipper'>
@@ -1002,9 +1000,17 @@
         <kinematic>false</kinematic>
         <enable_wind>false</enable_wind>
       </link>
-      <joint name='rear_right_flipper_j' type='fixed'>
+      <joint name='rear_right_flipper_j' type='revolute'>
         <child>rear_right_flipper</child>
         <parent>right_track</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>inf</effort>
+          </limit>
+        </axis>
         <pose>0 0 0 0 0 0</pose>
       </joint>
       <plugin name='gz::sim::systems::TrackedVehicle' filename='gz-sim-tracked-vehicle-system'>
@@ -1069,5 +1075,49 @@
       </plugin>
       <static>false</static>
       <self_collide>false</self_collide>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>front_left_flipper_j</joint_name>
+        <topic>front_left_flipper_j_cmd</topic>
+        <p_gain>1</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>0.01</d_gain>
+        <i_max>1</i_max>
+        <i_min>-1</i_min>
+        <cmd_max>2</cmd_max>
+        <cmd_min>-2</cmd_min>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>rear_left_flipper_j</joint_name>
+        <topic>rear_left_flipper_j_cmd</topic>
+        <p_gain>1</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>0.01</d_gain>
+        <i_max>1</i_max>
+        <i_min>-1</i_min>
+        <cmd_max>2</cmd_max>
+        <cmd_min>-2</cmd_min>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>front_right_flipper_j</joint_name>
+        <topic>front_right_flipper_j_cmd</topic>
+        <p_gain>1</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>0.01</d_gain>
+        <i_max>1</i_max>
+        <i_min>-1</i_min>
+        <cmd_max>2</cmd_max>
+        <cmd_min>-2</cmd_min>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>rear_right_flipper_j</joint_name>
+        <topic>rear_right_flipper_j_cmd</topic>
+        <p_gain>1</p_gain>
+        <i_gain>0.1</i_gain>
+        <d_gain>0.01</d_gain>
+        <i_max>1</i_max>
+        <i_min>-1</i_min>
+        <cmd_max>2</cmd_max>
+        <cmd_min>-2</cmd_min>
+      </plugin>
     </model>
 </sdf>
