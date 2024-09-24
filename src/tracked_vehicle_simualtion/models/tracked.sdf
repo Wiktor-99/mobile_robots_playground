@@ -444,13 +444,10 @@
         <pose>0 0 0 0 0 0</pose>
         <axis>
           <xyz>0 1 0</xyz>
-          <limit>
-            <lower>0</lower>
-            <upper>0</upper>
-            <effort>inf</effort>
-          </limit>
+          <dynamics>
+            <damping>0.5</damping>
+          </dynamics>
         </axis>
-        <pose>0 0 0 0 0 0</pose>
       </joint>
       <link name='rear_left_flipper'>
         <pose>-0.24999999999999956 0.27199999999999996 0.019500000000000045 3.1415899999999999 -0.499999999999307 3.1415899999999999</pose>
@@ -629,15 +626,13 @@
       <joint name='rear_left_flipper_j' type='revolute'>
         <child>rear_left_flipper</child>
         <parent>left_track</parent>
+        <pose>0 0 0 0 0 0</pose>
         <axis>
           <xyz>0 1 0</xyz>
-          <limit>
-            <lower>0</lower>
-            <upper>0</upper>
-            <effort>inf</effort>
-          </limit>
+          <dynamics>
+            <damping>0.5</damping>
+          </dynamics>
         </axis>
-        <pose>0 0 0 0 0 0</pose>
       </joint>
       <link name='front_right_flipper'>
         <pose>0.24999999999999911 -0.27199999999999996 0.019500000000000017 3.1415899999999999 0.49999999999963862 3.1415899999999999</pose>
@@ -816,15 +811,13 @@
       <joint name='front_right_flipper_j' type='revolute'>
         <child>front_right_flipper</child>
         <parent>right_track</parent>
+        <pose>0 0 0 0 0 0</pose>
         <axis>
           <xyz>0 1 0</xyz>
-          <limit>
-            <lower>0</lower>
-            <upper>0</upper>
-            <effort>inf</effort>
-          </limit>
+          <dynamics>
+            <damping>0.5</damping>
+          </dynamics>
         </axis>
-        <pose>0 0 0 0 0 0</pose>
       </joint>
       <link name='rear_right_flipper'>
         <pose>-0.24999994249490598 -0.272000105269326 0.019499998205294661 1.3956252588314928e-08 0.49615370147433774 2.0686407642123534e-07</pose>
@@ -1003,15 +996,13 @@
       <joint name='rear_right_flipper_j' type='revolute'>
         <child>rear_right_flipper</child>
         <parent>right_track</parent>
+        <pose>0 0 0 0 0 0</pose>
         <axis>
           <xyz>0 1 0</xyz>
-          <limit>
-            <lower>0</lower>
-            <upper>0</upper>
-            <effort>inf</effort>
-          </limit>
+          <dynamics>
+            <damping>0.5</damping>
+          </dynamics>
         </axis>
-        <pose>0 0 0 0 0 0</pose>
       </joint>
       <plugin name='gz::sim::systems::TrackedVehicle' filename='gz-sim-tracked-vehicle-system'>
         <left_track>
@@ -1083,8 +1074,8 @@
         <d_gain>0.01</d_gain>
         <i_max>1</i_max>
         <i_min>-1</i_min>
-        <cmd_max>2</cmd_max>
-        <cmd_min>-2</cmd_min>
+        <cmd_max>20</cmd_max>
+        <cmd_min>-20</cmd_min>
       </plugin>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>rear_left_flipper_j</joint_name>
@@ -1094,8 +1085,8 @@
         <d_gain>0.01</d_gain>
         <i_max>1</i_max>
         <i_min>-1</i_min>
-        <cmd_max>2</cmd_max>
-        <cmd_min>-2</cmd_min>
+        <cmd_max>20</cmd_max>
+        <cmd_min>-20</cmd_min>
       </plugin>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>front_right_flipper_j</joint_name>
@@ -1105,8 +1096,8 @@
         <d_gain>0.01</d_gain>
         <i_max>1</i_max>
         <i_min>-1</i_min>
-        <cmd_max>2</cmd_max>
-        <cmd_min>-2</cmd_min>
+        <cmd_max>20</cmd_max>
+        <cmd_min>-20</cmd_min>
       </plugin>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>rear_right_flipper_j</joint_name>
@@ -1116,8 +1107,8 @@
         <d_gain>0.01</d_gain>
         <i_max>1</i_max>
         <i_min>-1</i_min>
-        <cmd_max>2</cmd_max>
-        <cmd_min>-2</cmd_min>
+        <cmd_max>20</cmd_max>
+        <cmd_min>-20</cmd_min>
       </plugin>
       <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
           <topic>joint_states</topic>
