@@ -1077,7 +1077,7 @@
       <self_collide>false</self_collide>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>front_left_flipper_j</joint_name>
-        <topic>front_left_flipper_j_cmd</topic>
+        <topic>front_left_flipper_cmd</topic>
         <p_gain>1</p_gain>
         <i_gain>0.1</i_gain>
         <d_gain>0.01</d_gain>
@@ -1088,7 +1088,7 @@
       </plugin>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>rear_left_flipper_j</joint_name>
-        <topic>rear_left_flipper_j_cmd</topic>
+        <topic>rear_left_flipper_cmd</topic>
         <p_gain>1</p_gain>
         <i_gain>0.1</i_gain>
         <d_gain>0.01</d_gain>
@@ -1099,7 +1099,7 @@
       </plugin>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>front_right_flipper_j</joint_name>
-        <topic>front_right_flipper_j_cmd</topic>
+        <topic>front_right_flipper_cmd</topic>
         <p_gain>1</p_gain>
         <i_gain>0.1</i_gain>
         <d_gain>0.01</d_gain>
@@ -1110,7 +1110,7 @@
       </plugin>
       <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
         <joint_name>rear_right_flipper_j</joint_name>
-        <topic>rear_right_flipper_j_cmd</topic>
+        <topic>rear_right_flipper_cmd</topic>
         <p_gain>1</p_gain>
         <i_gain>0.1</i_gain>
         <d_gain>0.01</d_gain>
