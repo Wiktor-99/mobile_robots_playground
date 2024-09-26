@@ -28,6 +28,7 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     ros-$ROS_DISTRO-ros-gzharmonic-bridge \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-libg2o \
+    ros-$ROS_DISTRO-sdformat-urdf \
     pre-commit \
     && apt-get autoremove -y \
     && apt-get clean \
