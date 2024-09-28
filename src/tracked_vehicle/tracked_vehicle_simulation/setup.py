@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'tracked_vehicle_simualtion'
+package_name = 'tracked_vehicle_simulation'
 
 setup(
     name=package_name,
