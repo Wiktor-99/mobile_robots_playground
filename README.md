@@ -2,9 +2,10 @@
 
 Repo contains experiments with mobile robots.
 Currently repo contains:
-* Simple Diff drive robot simulation with RGLLidar Plugin
-* Lidar slam
-* RGLGazeboPlugin
+* Simple Diff drive robot simulation with:
+  * Lidar slam
+  * RGLGazeboPlugin
+* Tracked vehicle simulation
 
 
 # How to set up
@@ -53,3 +54,17 @@ ros2 service call /map_save std_srvs/Empty
 ## Results of mapping with lidar slam
 
 ![Input point cloud from the RGLPlugin](/img/map_in_rviz.png " ") ![The map](/img/map_pcl.png " ")
+
+
+## How to run tracked vehicle simulation
+
+Just build the whole project or following packages with packages-select option:
+* tracked_vehicle_interfaces
+* tracked_vehicle_simulation
+* tracks_controller
+
+Run simulation with
+
+```bash
+ros2 launch tracked_vehicle_simulation tracked_vehicle_bringup.launch.py
+```

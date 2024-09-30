@@ -19,10 +19,10 @@ def load_robot_description(path_to_sdf_file):
 
 
 def generate_launch_description():
-    tracked_vehicle_simualtion_path = get_package_share_directory('tracked_vehicle_simualtion')
+    tracked_vehicle_simulation_path = get_package_share_directory('tracked_vehicle_simulation')
     world_arguments = DeclareLaunchArgument(
         "world",
-        default_value=os.path.join(tracked_vehicle_simualtion_path, "worlds", "tracked_vehicle_world.sdf"),
+        default_value=os.path.join(tracked_vehicle_simulation_path, "worlds", "tracked_vehicle_world.sdf"),
         description="Robot controller to start.",
     )
 
@@ -35,7 +35,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         name="gz_bridge",
-        ros_arguments=["-p", f"config_file:={os.path.join(tracked_vehicle_simualtion_path, 'config', 'ign_bridge.yaml')}"],
+        ros_arguments=["-p", f"config_file:={os.path.join(tracked_vehicle_simulation_path, 'config', 'ign_bridge.yaml')}"],
         output="screen",
     )
 
@@ -45,7 +45,7 @@ def generate_launch_description():
         name='ekf_filter_node',
         output='screen',
         parameters=[
-            os.path.join(tracked_vehicle_simualtion_path, 'config', 'ekf.yaml'),
+            os.path.join(tracked_vehicle_simulation_path, 'config', 'ekf.yaml'),
             {'use_sim_time' : True}
         ]
     )
@@ -55,7 +55,7 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[
-            {'robot_description': load_robot_description(os.path.join(tracked_vehicle_simualtion_path, 'models', 'tracked.sdf'))},
+            {'robot_description': load_robot_description(os.path.join(tracked_vehicle_simulation_path, 'models', 'tracked.sdf'))},
             {'use_sim_time' : True}
 
         ],
@@ -73,7 +73,7 @@ def generate_launch_description():
         package="rviz2",
         executable="rviz2",
         name="rviz2",
-        arguments=["-d", os.path.join(tracked_vehicle_simualtion_path, 'rviz', 'tracked.rviz')],
+        arguments=["-d", os.path.join(tracked_vehicle_simulation_path, 'rviz', 'tracked.rviz')],
         output="screen",
     )
 

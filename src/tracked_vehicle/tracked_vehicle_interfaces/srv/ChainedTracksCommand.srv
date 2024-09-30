@@ -1,3 +1,4 @@
-float64 data
+float64 front_tracks_cmd
+float64 back_tracks_cmd
 ---
 bool result

@@ -17,23 +17,14 @@ class TracksController(Node):
         ]
 
         self.front_tracks_control_service = self.create_service(
-            ChainedTracksCommand,
-            'front_tracks_controller',
-            lambda request, response:
-                self.tracks_control_callback(request, response, self.front_track_control_publishers))
-        self.rear_tracks_control_service = self.create_service(
-            ChainedTracksCommand,
-            'rear_tracks_controller',
-            lambda request, response:
-                self.tracks_control_callback(request, response, self.rear_track_control_publishers))
+            ChainedTracksCommand, 'tracks_controller', self.tracks_control_callback)
 
-    def tracks_control_callback(
-            self,
-            request: ChainedTracksCommand.Request,
-            response: ChainedTracksCommand.Response,
-            publishers: list[rclpy.publisher.Publisher]):
-        for publisher in publishers:
-            publisher.publish(Float64(data=request.data))
+    def tracks_control_callback(self, request: ChainedTracksCommand.Request, response: ChainedTracksCommand.Response):
+        for publisher in self.front_track_control_publishers:
+            publisher.publish(Float64(data=request.front_tracks_cmd))
+
+        for publisher in self.rear_track_control_publishers:
+            publisher.publish(Float64(data=request.back_tracks_cmd))
 
         response.result = True
         return response
