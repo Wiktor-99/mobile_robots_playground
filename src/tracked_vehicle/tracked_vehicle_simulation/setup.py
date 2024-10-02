@@ -19,7 +19,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='wiktorbajor1@gmail.com',
+    maintainer='Wiktor Bajor',
     maintainer_email='wiktorbajor1@gmail.com',
     description='Bringup of simulation',
     license='Apache License 2.0',
