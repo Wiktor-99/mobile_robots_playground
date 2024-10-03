@@ -1,5 +1,7 @@
 <sdf version='1.9'>
     <model name='simple_tracked'>
+      <link name="base_footprint" />
+
       <link name='base_link'>
         <pose>0 0 0 0 0 0</pose>
         <inertial>
@@ -48,6 +50,12 @@
           <topic>imu</topic>
         </sensor>
       </link>
+      <joint name='base_joint' type='fixed'>
+        <child>base_link</child>
+        <parent>base_footprint</parent>
+        <pose>0 0 0 0 0 0</pose>
+      </joint>
+
       <link name='left_track'>
         <pose>0 0.19850000000000001 -1.3877787807814457e-17 -6.6174449004242214e-24 -3.2182495707141233e-23 -8.6736173798840355e-19</pose>
         <inertial>
@@ -1027,6 +1035,11 @@
         <tracks_separation>0.4</tracks_separation>
         <tracks_height>0.18094</tracks_height>
         <steering_efficiency>0.7</steering_efficiency>
+        <odom_topic>odom</odom_topic>
+        <frame_id>odom</frame_id>
+        <child_frame_id>base_link</child_frame_id>
+        <odom_publisher_frequency>30</odom_publisher_frequency>
+        <tf_topic>tf</tf_topic>
       </plugin>
       <plugin name='gz::sim::systems::TrackController' filename='gz-sim-track-controller-system'>
         <link>left_track</link>
