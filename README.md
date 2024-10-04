@@ -68,3 +68,7 @@ Run simulation with
 ```bash
 ros2 launch tracked_vehicle_simulation tracked_vehicle_bringup.launch.py
 ```
+
+## Tracked vehicle simulation
+
+![Tracked vehicle simulation](/img/tracked.png " ")
