@@ -39,7 +39,7 @@ ENV GZ_VERSION=harmonic
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     mkdir -p /gz_ros2_control_ws/src && \
     cd /gz_ros2_control_ws/src && \
-    git clone --branch iron https://github.com/ros-controls/gz_ros2_control && \
+    git clone --branch $ROS_DISTRO https://github.com/ros-controls/gz_ros2_control && \
     cd /gz_ros2_control_ws && \
     colcon build
 ENV DEBIAN_FRONTEND=dialog
