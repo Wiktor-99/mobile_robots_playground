@@ -16,23 +16,22 @@ RUN apt-get update && apt-get upgrade -y \
 
 RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
-    apt-get update --fix-missing \
-    && apt-get -y install \
-    gz-harmonic git-core \
+    apt-get update --fix-missing && \
+    apt-get -y install \
+    git-core \
     bash-completion \
     ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     ros-$ROS_DISTRO-xacro \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-robot-localization \
-    ros-$ROS_DISTRO-ros-gzharmonic-sim \
+    ros-$ROS_DISTRO-ros-gzharmonic \
     ros-$ROS_DISTRO-ros-gzharmonic-bridge \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-libg2o \
-    ros-$ROS_DISTRO-sdformat-urdf \
-    pre-commit \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    ros-$ROS_DISTRO-sdformat-urdf &&\
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
