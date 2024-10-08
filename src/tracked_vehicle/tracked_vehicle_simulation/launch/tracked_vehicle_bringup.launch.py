@@ -77,6 +77,13 @@ def generate_launch_description():
         output="screen",
     )
 
+    tracks_controller = Node(
+        package="tracks_controller",
+        executable="tracks_controller",
+        parameters=[{"use_sim_time": True}],
+        emulate_tty=True,
+    )
+
     return LaunchDescription(
         [
             world_arguments,
@@ -85,5 +92,6 @@ def generate_launch_description():
             robot_localization_node,
             robot_state_publisher,
             gazebo_spawn_robot,
-            rviz2
+            rviz2,
+            tracks_controller
         ])
