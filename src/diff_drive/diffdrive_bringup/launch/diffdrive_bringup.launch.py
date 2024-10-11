@@ -22,7 +22,7 @@ def generate_launch_description():
             "world",
             default_value=os.path.join(diffdrive_bringup_path, "worlds", "default_world.sdf"),
             description="Robot controller to start.",
-        )
+        ),
         DeclareLaunchArgument(
             "use_lidar_slam",
             default_value='False',
