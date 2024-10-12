@@ -97,7 +97,7 @@
 
     <include>
       <uri>
-        https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Depot
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Depot
       </uri>
       <pose>7.19009 1.09982 0 0 0 0</pose>
     </include>
