@@ -8,7 +8,9 @@ from launch.substitutions import (
     LaunchConfiguration,
     Command
 )
+from launch.conditions import IfCondition
 from ament_index_python.packages import get_package_share_directory
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 import os
 
@@ -20,8 +22,18 @@ def generate_launch_description():
             "world",
             default_value=os.path.join(diffdrive_bringup_path, "worlds", "default_world.sdf"),
             description="Robot controller to start.",
+        ),
+        DeclareLaunchArgument(
+            "use_lidar_slam",
+            default_value='False',
+            description="Use or not lidar slam",
         )
     ]
+
+    lidar_slam = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([diffdrive_bringup_path, "/launch/lidar_slam.launch.py"]),
+        condition=IfCondition(LaunchConfiguration("use_lidar_slam"))
+    )
 
     gazebo = IncludeLaunchDescription(
         os.path.join(get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py"),
@@ -99,5 +111,6 @@ def generate_launch_description():
             robot_localization_node,
             load_joint_state_controller,
             load_diff_drive_controller,
-            rviz2
+            rviz2,
+            lidar_slam
         ])
