@@ -32,13 +32,7 @@ export GZ_GUI_PLUGIN_PATH=`pwd`/src/RGLGazeboPlugin/install/RGLVisualize:$GZ_GUI
 
 In the first terminal run:
 ``` bash
-ros2 launch diffdrive_bringup diffdrive_bringup.launch.py
-```
-
-In the second terminal:
-
-```
-ros2 launch diffdrive_bringup lidar_slam.launch.py
+ros2 launch diffdrive_bringup diffdrive_bringup.launch.py use_lidar_slam:=True
 ```
 
 In the third terminal:
