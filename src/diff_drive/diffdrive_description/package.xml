@@ -4,7 +4,7 @@
   <name>diffdrive_description</name>
   <version>1.0.0</version>
   <description>Description of diffdrive_robot</description>
-  <maintainer email="wiktorbajor1@gmail.com">ros</maintainer>
+  <maintainer email="wiktorbajor1@gmail.com">Wiktor Bajor</maintainer>
   <license>Apache License 2.0</license>
 
   <export>
