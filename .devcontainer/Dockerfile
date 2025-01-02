@@ -1,5 +1,5 @@
-FROM althack/ros2:iron-cuda-full
-ARG ROS_DISTRO=iron
+FROM althack/ros2:rolling-cuda-full
+ARG ROS_DISTRO=rolling
 ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -20,12 +20,11 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     apt-get -y install \
     git-core \
     bash-completion \
-    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     ros-$ROS_DISTRO-xacro \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-robot-localization \
-    ros-$ROS_DISTRO-ros-gzharmonic \
-    ros-$ROS_DISTRO-ros-gzharmonic-bridge \
+    ros-$ROS_DISTRO-ros-gz \
+    ros-$ROS_DISTRO-ros-gz-bridge \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-libg2o \
     ros-$ROS_DISTRO-sdformat-urdf &&\
@@ -35,7 +34,7 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
 
 ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
-ENV GZ_VERSION=harmonic
+# ENV GZ_VERSION=harmonic
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     mkdir -p /gz_ros2_control_ws/src && \
     cd /gz_ros2_control_ws/src && \
