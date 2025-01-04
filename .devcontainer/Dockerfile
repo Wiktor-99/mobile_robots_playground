@@ -20,6 +20,8 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     apt-get -y install \
     git-core \
     bash-completion \
+    libg2o-dev \
+    libpcl-dev \
     ros-$ROS_DISTRO-xacro \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-robot-localization \
@@ -34,7 +36,6 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
 
 ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
-# ENV GZ_VERSION=harmonic
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     mkdir -p /gz_ros2_control_ws/src && \
     cd /gz_ros2_control_ws/src && \
