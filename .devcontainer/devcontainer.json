@@ -34,13 +34,10 @@
     "vscode": {
       "extensions": [
        "ms-azuretools.vscode-docker",
-       "ms-iot.vscode-ros",
        "ms-python.python",
        "ms-vscode.cpptools",
        "redhat.vscode-yaml",
-       "smilerobotics.urdf",
        "streetsidesoftware.code-spell-checker",
-       "yzhang.markdown-all-in-one",
        "ms-vscode.cmake-tools"
       ]
     }
