@@ -6,13 +6,17 @@ from launch.actions import (
 )
 from launch.substitutions import (
     LaunchConfiguration,
-    Command
+    Command,
+    PathJoinSubstitution
 )
+from launch.actions import RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 import os
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -87,18 +91,24 @@ def generate_launch_description():
         ]
     )
 
-    load_joint_state_controller = ExecuteProcess(
-        name="activate_joint_state_broadcaster",
-        cmd=["ros2", "control", "load_controller", "--set-state", "active", "joint_state_broadcaster"],
-        shell=False,
-        output="screen",
+    robot_controllers = PathJoinSubstitution(
+        [
+            FindPackageShare('diffdrive_bringup'),
+            'config',
+            'controllers.yaml',
+        ]
     )
 
-    load_diff_drive_controller = ExecuteProcess(
-        name="activate_diff_drive_controller",
-        cmd=[ "ros2", "control", "load_controller", "--set-state", "active", "diff_drive_controller"],
-        shell=False,
-        output="screen",
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--switch-timeout', '30', '--param-file', robot_controllers],
+    )
+
+    diff_drive_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['diff_drive_controller', '--param-file', robot_controllers],
     )
 
     return LaunchDescription(
@@ -106,11 +116,21 @@ def generate_launch_description():
         [
             ign_bridge,
             gazebo,
-            gazebo_spawn_robot,
             robot_state_publisher,
             robot_localization_node,
-            load_joint_state_controller,
-            load_diff_drive_controller,
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=gazebo_spawn_robot,
+                    on_exit=[joint_state_broadcaster_spawner],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster_spawner,
+                    on_exit=[diff_drive_controller_spawner],
+                )
+            ),
+            gazebo_spawn_robot,
             rviz2,
             lidar_slam
         ])
