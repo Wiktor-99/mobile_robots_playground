@@ -1,5 +1,5 @@
-FROM althack/ros2:rolling-cuda-full
-ARG ROS_DISTRO=rolling
+FROM althack/ros2:jazzy-cuda-full
+ARG ROS_DISTRO=jazzy
 ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -22,6 +22,7 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     bash-completion \
     libg2o-dev \
     libpcl-dev \
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     ros-$ROS_DISTRO-xacro \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-robot-localization \
@@ -29,6 +30,10 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     ros-$ROS_DISTRO-ros-gz-bridge \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-libg2o \
+    ros-$ROS_DISTRO-slam-toolbox \
+    ros-$ROS_DISTRO-navigation2 \
+    ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-nav2-rviz-plugins \
     ros-$ROS_DISTRO-sdformat-urdf &&\
     apt-get autoremove -y && \
     apt-get clean && \

@@ -2,7 +2,7 @@ from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
     IncludeLaunchDescription,
-    ExecuteProcess
+    RegisterEventHandler
 )
 from launch.substitutions import (
     LaunchConfiguration,
@@ -56,8 +56,28 @@ def generate_launch_description():
         package="rviz2",
         executable="rviz2",
         name="rviz2",
-        arguments=["-d", os.path.join(diffdrive_bringup_path, 'rviz', 'localization.rviz')],
+        arguments=["-d", os.path.join(diffdrive_bringup_path, 'rviz', 'nav2.rviz')],
         output="screen",
+    )
+
+    slam_toolbox = IncludeLaunchDescription(
+        os.path.join(get_package_share_directory("slam_toolbox"), "launch", "online_async_launch.py"),
+        launch_arguments={
+            "use_sim_time": "True",
+            "params_file": PathJoinSubstitution(
+                [get_package_share_directory("diffdrive_bringup"), "config", "mapper_params_online_async.yaml"]
+            ),
+        }.items(),
+    )
+
+    nav2_bring_up = IncludeLaunchDescription(
+        os.path.join(get_package_share_directory("nav2_bringup"), "launch", "navigation_launch.py"),
+        launch_arguments={
+            "use_sim_time": "True",
+            "params_file": PathJoinSubstitution(
+                [get_package_share_directory("diffdrive_bringup"), "config", "nav2_params.yaml"]
+            ),
+        }.items(),
     )
 
     gazebo_spawn_robot = Node(
@@ -131,6 +151,8 @@ def generate_launch_description():
                 )
             ),
             gazebo_spawn_robot,
+            lidar_slam,
+            slam_toolbox,
+            nav2_bring_up,
             rviz2,
-            lidar_slam
         ])

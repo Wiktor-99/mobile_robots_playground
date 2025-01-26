@@ -18,6 +18,8 @@
     <xacro:property name="caster_mass" value="0.10" />
     <xacro:property name="lidar_zoff" value="0.03" />
 
+
+    <xacro:arg name="use_3d_lidar" default="false"/>
     <link name="base_footprint" />
 
     <link name="base_link">
@@ -99,7 +101,7 @@
         <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
             <parameters>$(find diffdrive_bringup)/config/controllers.yaml</parameters>
             <ros>
-                <remapping>/diff_drive_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
+                <remapping>/diff_drive_controller/cmd_vel:=/cmd_vel</remapping>
                 <remapping>/diff_drive_controller/odom:=/odom</remapping>
             </ros>
         </plugin>
@@ -134,13 +136,25 @@
                 <box size="0.1 0.1 0.1" />
             </geometry>
         </visual>
-
         <collision>
             <geometry>
                 <box size="0.1 0.1 0.1" />
             </geometry>
         </collision>
+        <xacro:box_inertia m="0.1" w="0.1" d="0.1" h="0.1" />
+    </link>
 
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="0.05 0.1 0.05" />
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.05 0.1 0.05" />
+            </geometry>
+        </collision>
         <xacro:box_inertia m="0.1" w="0.1" d="0.1" h="0.1" />
     </link>
 
@@ -148,6 +162,12 @@
         <parent link="base_link" />
         <child link="imu_link" />
         <origin xyz="0 0 0.01" />
+    </joint>
+
+    <joint name="camera_joint" type="fixed">
+        <parent link="imu_link" />
+        <child link="camera_link" />
+        <origin xyz="0 0 0.2" />
     </joint>
 
     <gazebo reference="imu_link">
@@ -182,6 +202,7 @@
     </joint>
 
     <gazebo reference="lidar_link">
+        <xacro:if value="$(arg use_3d_lidar)">
         <sensor name="RGLLidar" type="custom">
             <plugin filename="RGLServerPluginInstance" name="rgl::RGLServerPluginInstance">
                 <range>245</range>
@@ -203,5 +224,56 @@
                 </pattern_uniform>
             </plugin>
         </sensor>
+        </xacro:if>
+        <xacro:unless value="$(arg use_3d_lidar)">
+        <sensor name='gpu_lidar' type='gpu_lidar'>"
+            <gz_frame_id>base_link</gz_frame_id>
+            <topic>scan</topic>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>640</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.396263</min_angle>
+                        <max_angle>1.396263</max_angle>
+                    </horizontal>
+                    <vertical>
+                        <samples>1</samples>
+                        <resolution>0.01</resolution>
+                        <min_angle>0</min_angle>
+                        <max_angle>0</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.08</min>
+                    <max>10.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+            </ray>
+            <always_on>1</always_on>
+            <visualize>true</visualize>
+        </sensor>
+        </xacro:unless>
+    </gazebo>
+
+    <gazebo reference="camera_link">
+        <sensor name="depth_camera" type="depth_camera">
+            <gz_frame_id>camera_link</gz_frame_id>
+            <update_rate>10</update_rate>
+            <topic>depth_camera</topic>
+            <camera>
+                <horizontal_fov>1.05</horizontal_fov>
+                <image>
+                    <width>256</width>
+                    <height>256</height>
+                    <format>R_FLOAT32</format>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>8.0</far>
+                </clip>
+            </camera>
+    </sensor>
     </gazebo>
 </robot>
