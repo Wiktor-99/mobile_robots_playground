@@ -2,16 +2,16 @@ from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
     IncludeLaunchDescription,
-    ExecuteProcess
+    RegisterEventHandler
 )
 from launch.substitutions import (
     LaunchConfiguration,
     Command,
-    PathJoinSubstitution
+    PathJoinSubstitution,
 )
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessExit
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
@@ -34,9 +34,10 @@ def generate_launch_description():
         )
     ]
 
+    use_lidar_slam = LaunchConfiguration("use_lidar_slam")
     lidar_slam = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([diffdrive_bringup_path, "/launch/lidar_slam.launch.py"]),
-        condition=IfCondition(LaunchConfiguration("use_lidar_slam"))
+        condition=IfCondition(use_lidar_slam)
     )
 
     gazebo = IncludeLaunchDescription(
@@ -52,12 +53,44 @@ def generate_launch_description():
         output="screen",
     )
 
-    rviz2 = Node(
+    rviz2_lidar_slam = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2",
         arguments=["-d", os.path.join(diffdrive_bringup_path, 'rviz', 'localization.rviz')],
         output="screen",
+        condition=IfCondition(use_lidar_slam)
+    )
+
+    rviz2_nav = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        arguments=["-d", os.path.join(diffdrive_bringup_path, 'rviz', 'nav2.rviz')],
+        output="screen",
+        condition=UnlessCondition(use_lidar_slam)
+    )
+
+    slam_toolbox = IncludeLaunchDescription(
+        os.path.join(get_package_share_directory("slam_toolbox"), "launch", "online_async_launch.py"),
+        launch_arguments={
+            "use_sim_time": "True",
+            "params_file": PathJoinSubstitution(
+                [get_package_share_directory("diffdrive_bringup"), "config", "mapper_params_online_async.yaml"]
+            ),
+        }.items(),
+        condition=UnlessCondition(use_lidar_slam)
+    )
+
+    nav2_bring_up = IncludeLaunchDescription(
+        os.path.join(get_package_share_directory("nav2_bringup"), "launch", "navigation_launch.py"),
+        launch_arguments={
+            "use_sim_time": "True",
+            "params_file": PathJoinSubstitution(
+                [get_package_share_directory("diffdrive_bringup"), "config", "nav2_params.yaml"]
+            ),
+        }.items(),
+        condition=UnlessCondition(use_lidar_slam)
     )
 
     gazebo_spawn_robot = Node(
@@ -74,7 +107,7 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[
-            {'robot_description': Command(['xacro ', xacro_file]) },
+            {'robot_description': Command(['xacro ', xacro_file, ' use_3d_lidar:=', use_lidar_slam]) },
             {'use_sim_time' : True}
 
         ],
@@ -131,6 +164,9 @@ def generate_launch_description():
                 )
             ),
             gazebo_spawn_robot,
-            rviz2,
-            lidar_slam
+            lidar_slam,
+            slam_toolbox,
+            nav2_bring_up,
+            rviz2_lidar_slam,
+            rviz2_nav,
         ])
