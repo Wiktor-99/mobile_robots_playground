@@ -205,7 +205,10 @@
         <xacro:if value="$(arg use_3d_lidar)">
         <sensor name="RGLLidar" type="custom">
             <plugin filename="RGLServerPluginInstance" name="rgl::RGLServerPluginInstance">
-                <range>245</range>
+                <range>245
+                    <min>0</min>
+                    <max>245</max>
+                </range>
                 <update_rate>20</update_rate>
                 <update_on_paused_sim>false</update_on_paused_sim>
                 <topic>lidar</topic>
