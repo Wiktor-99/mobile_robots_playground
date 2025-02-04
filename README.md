@@ -24,8 +24,8 @@ To run in devcontainer you need to:
 ``` bash
 colcon build && source install/setup.bash
 
-export GZ_SIM_SYSTEM_PLUGIN_PATH=`pwd`/src/RGLGazeboPlugin/install/RGLServerPlugin:$GZ_SIM_SYSTEM_PLUGIN_PATH
-export GZ_GUI_PLUGIN_PATH=`pwd`/src/RGLGazeboPlugin/install/RGLVisualize:$GZ_GUI_PLUGIN_PATH
+export GZ_SIM_SYSTEM_PLUGIN_PATH=`pwd`/install/RGLGazeboPlugin/RGLServerPlugin:$GZ_SIM_SYSTEM_PLUGIN_PATH
+export GZ_GUI_PLUGIN_PATH=`pwd`/install/RGLGazeboPlugin/RGLVisualize:$GZ_GUI_PLUGIN_PATH
 ```
 
 ## How to run diffdrive simulation with lidar slam
