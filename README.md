@@ -2,6 +2,7 @@
 
 Repo contains experiments with mobile robots.
 Currently repo contains:
+* Nav 2 support
 * Simple Diff drive robot simulation with:
   * Lidar slam
   * RGLGazeboPlugin
@@ -26,6 +27,13 @@ colcon build && source install/setup.bash
 
 export GZ_SIM_SYSTEM_PLUGIN_PATH=`pwd`/install/RGLGazeboPlugin/RGLServerPlugin:$GZ_SIM_SYSTEM_PLUGIN_PATH
 export GZ_GUI_PLUGIN_PATH=`pwd`/install/RGLGazeboPlugin/RGLVisualize:$GZ_GUI_PLUGIN_PATH
+```
+
+# Nav 2
+
+To start Nav 2 just run
+``` bash
+ros2 launch diffdrive_bringup diffdrive_bringup.launch.py
 ```
 
 ## How to run diffdrive simulation with lidar slam
