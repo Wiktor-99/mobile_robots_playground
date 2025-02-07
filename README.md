@@ -45,7 +45,7 @@ ros2 launch diffdrive_bringup diffdrive_bringup.launch.py use_lidar_slam:=True
 
 In the third terminal:
 ```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=True
 ```
 
 To save the map use:
