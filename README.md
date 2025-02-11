@@ -36,6 +36,10 @@ To start Nav 2 just run
 ros2 launch diffdrive_bringup diffdrive_bringup.launch.py
 ```
 
+## Results of mapping with nav2
+
+![Nav2 map](/img/nav2_map.png " ")
+
 ## How to run diffdrive simulation with lidar slam
 
 In the first terminal run:
