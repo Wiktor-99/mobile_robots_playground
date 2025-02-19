@@ -46,6 +46,6 @@ def generate_launch_description():
                 description="Use /clock as time source.",
             ),
             mapping,
-            graph_based_slam
+            graph_based_slam,
         ]
     )

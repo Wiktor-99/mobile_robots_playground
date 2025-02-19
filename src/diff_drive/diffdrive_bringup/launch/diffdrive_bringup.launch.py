@@ -1,9 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument,
-    IncludeLaunchDescription,
-    RegisterEventHandler
-)
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler
 from launch.substitutions import (
     LaunchConfiguration,
     Command,
@@ -20,7 +16,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    diffdrive_bringup_path = get_package_share_directory('diffdrive_bringup')
+    diffdrive_bringup_path = get_package_share_directory("diffdrive_bringup")
     declared_arguments = [
         DeclareLaunchArgument(
             "world",
@@ -29,15 +25,15 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "use_lidar_slam",
-            default_value='False',
+            default_value="False",
             description="Use or not lidar slam",
-        )
+        ),
     ]
 
     use_lidar_slam = LaunchConfiguration("use_lidar_slam")
     lidar_slam = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([diffdrive_bringup_path, "/launch/lidar_slam.launch.py"]),
-        condition=IfCondition(use_lidar_slam)
+        condition=IfCondition(use_lidar_slam),
     )
 
     gazebo = IncludeLaunchDescription(
@@ -57,18 +53,18 @@ def generate_launch_description():
         package="rviz2",
         executable="rviz2",
         name="rviz2",
-        arguments=["-d", os.path.join(diffdrive_bringup_path, 'rviz', 'localization.rviz')],
+        arguments=["-d", os.path.join(diffdrive_bringup_path, "rviz", "localization.rviz")],
         output="screen",
-        condition=IfCondition(use_lidar_slam)
+        condition=IfCondition(use_lidar_slam),
     )
 
     rviz2_nav = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2",
-        arguments=["-d", os.path.join(diffdrive_bringup_path, 'rviz', 'nav2.rviz')],
+        arguments=["-d", os.path.join(diffdrive_bringup_path, "rviz", "nav2.rviz")],
         output="screen",
-        condition=UnlessCondition(use_lidar_slam)
+        condition=UnlessCondition(use_lidar_slam),
     )
 
     slam_toolbox = IncludeLaunchDescription(
@@ -79,7 +75,7 @@ def generate_launch_description():
                 [get_package_share_directory("diffdrive_bringup"), "config", "mapper_params_online_async.yaml"]
             ),
         }.items(),
-        condition=UnlessCondition(use_lidar_slam)
+        condition=UnlessCondition(use_lidar_slam),
     )
 
     nav2_bring_up = IncludeLaunchDescription(
@@ -90,7 +86,7 @@ def generate_launch_description():
                 [get_package_share_directory("diffdrive_bringup"), "config", "nav2_params.yaml"]
             ),
         }.items(),
-        condition=UnlessCondition(use_lidar_slam)
+        condition=UnlessCondition(use_lidar_slam),
     )
 
     gazebo_spawn_robot = Node(
@@ -101,52 +97,48 @@ def generate_launch_description():
         output="screen",
     )
 
-    xacro_file = os.path.join(get_package_share_directory('diffdrive_description'), 'urdf', 'robot.urdf.xacro')
+    xacro_file = os.path.join(get_package_share_directory("diffdrive_description"), "urdf", "robot.urdf.xacro")
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
         parameters=[
-            {'robot_description': Command(['xacro ', xacro_file, ' use_3d_lidar:=', use_lidar_slam]) },
-            {'use_sim_time' : True}
-
+            {"robot_description": Command(["xacro ", xacro_file, " use_3d_lidar:=", use_lidar_slam])},
+            {"use_sim_time": True},
         ],
     )
 
     robot_localization_node = Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[
-            os.path.join(diffdrive_bringup_path, 'config', 'ekf.yaml'),
-            {'use_sim_time' : True}
-        ]
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[os.path.join(diffdrive_bringup_path, "config", "ekf.yaml"), {"use_sim_time": True}],
     )
 
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare('diffdrive_bringup'),
-            'config',
-            'controllers.yaml',
+            FindPackageShare("diffdrive_bringup"),
+            "config",
+            "controllers.yaml",
         ]
     )
 
     joint_state_broadcaster_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '--switch-timeout', '30', '--param-file', robot_controllers],
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--switch-timeout", "30", "--param-file", robot_controllers],
     )
 
     diff_drive_controller_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['diff_drive_controller', '--param-file', robot_controllers],
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_drive_controller", "--param-file", robot_controllers],
     )
 
     return LaunchDescription(
-        declared_arguments +
-        [
+        declared_arguments
+        + [
             ign_bridge,
             gazebo,
             robot_state_publisher,
@@ -169,4 +161,5 @@ def generate_launch_description():
             nav2_bring_up,
             rviz2_lidar_slam,
             rviz2_nav,
-        ])
+        ]
+    )
