@@ -34,10 +34,14 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
     ros-$ROS_DISTRO-nav2-rviz-plugins \
-    ros-$ROS_DISTRO-sdformat-urdf &&\
+    ros-$ROS_DISTRO-sdformat-urdf \
+    ros-$ROS_DISTRO-pcl-ros \
+    ros-$ROS_DISTRO-tf-transformations && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install numpy  --break-system-packages
 
 ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
@@ -45,6 +49,7 @@ RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     mkdir -p /gz_ros2_control_ws/src && \
     cd /gz_ros2_control_ws/src && \
     git clone --branch $ROS_DISTRO https://github.com/ros-controls/gz_ros2_control && \
+    git clone https://github.com/dfki-ric/pclomp.git && \
     cd /gz_ros2_control_ws && \
     colcon build
 ENV DEBIAN_FRONTEND=dialog
