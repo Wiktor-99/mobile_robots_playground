@@ -5,7 +5,6 @@ from launch.substitutions import (
     Command,
     PathJoinSubstitution,
 )
-from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition, UnlessCondition
 from ament_index_python.packages import get_package_share_directory
