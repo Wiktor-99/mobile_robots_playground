@@ -4,7 +4,6 @@ from launch.substitutions import (
     LaunchConfiguration,
     Command,
     PathJoinSubstitution,
-    PythonExpression,
 )
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition, UnlessCondition
@@ -28,18 +27,12 @@ def generate_launch_description():
             default_value="False",
             description="Use or not lidar slam",
         ),
-        DeclareLaunchArgument(
-            "use_nav2",
-            default_value="False",
-            description="Use or not use_nav2",
-        ),
     ]
 
     use_lidar_slam = LaunchConfiguration("use_lidar_slam")
-    use_nav2 = LaunchConfiguration("use_nav2")
     lidar_slam = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([diffdrive_bringup_path, "/launch/lidar_slam.launch.py"]),
-        condition=IfCondition(PythonExpression([use_lidar_slam, " and not ", use_nav2])),
+        condition=IfCondition(use_lidar_slam),
     )
 
     gazebo = IncludeLaunchDescription(
@@ -61,7 +54,7 @@ def generate_launch_description():
         name="rviz2",
         arguments=["-d", os.path.join(diffdrive_bringup_path, "rviz", "localization.rviz")],
         output="screen",
-        condition=IfCondition(PythonExpression([use_lidar_slam, " and not ", use_nav2])),
+        condition=IfCondition(use_lidar_slam),
     )
 
     rviz2_nav = Node(
@@ -70,7 +63,7 @@ def generate_launch_description():
         name="rviz2",
         arguments=["-d", os.path.join(diffdrive_bringup_path, "rviz", "nav2.rviz")],
         output="screen",
-        condition=IfCondition(use_nav2),
+        condition=UnlessCondition(use_lidar_slam),
     )
 
     slam_toolbox = IncludeLaunchDescription(
@@ -81,7 +74,7 @@ def generate_launch_description():
                 [get_package_share_directory("diffdrive_bringup"), "config", "mapper_params_online_async.yaml"]
             ),
         }.items(),
-        condition=IfCondition(use_nav2),
+        condition=UnlessCondition(use_lidar_slam),
     )
 
     nav2_bring_up = IncludeLaunchDescription(
@@ -92,7 +85,7 @@ def generate_launch_description():
                 [get_package_share_directory("diffdrive_bringup"), "config", "nav2_params.yaml"]
             ),
         }.items(),
-        condition=IfCondition(use_nav2),
+        condition=UnlessCondition(use_lidar_slam),
     )
 
     gazebo_spawn_robot = Node(
