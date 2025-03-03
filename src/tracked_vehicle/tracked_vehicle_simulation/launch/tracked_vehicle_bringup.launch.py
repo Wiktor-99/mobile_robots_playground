@@ -3,23 +3,21 @@ from launch.actions import (
     DeclareLaunchArgument,
     IncludeLaunchDescription,
 )
-from launch.substitutions import (
-    LaunchConfiguration
-)
+from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 import os
 
 
 def load_robot_description(path_to_sdf_file):
-    with open(path_to_sdf_file, 'r') as sdf_file:
+    with open(path_to_sdf_file, "r") as sdf_file:
         robot_description = sdf_file.read()
 
     return robot_description
 
 
 def generate_launch_description():
-    tracked_vehicle_simulation_path = get_package_share_directory('tracked_vehicle_simulation')
+    tracked_vehicle_simulation_path = get_package_share_directory("tracked_vehicle_simulation")
     world_arguments = DeclareLaunchArgument(
         "world",
         default_value=os.path.join(tracked_vehicle_simulation_path, "worlds", "tracked_vehicle_world.sdf"),
@@ -27,27 +25,27 @@ def generate_launch_description():
     )
 
     gazebo = IncludeLaunchDescription(
-        os.path.join(get_package_share_directory("ros_gz_sim"), 'launch', 'gz_sim.launch.py'),
-         launch_arguments=[('gz_args', ["-r -v 4 ", LaunchConfiguration('world')])]
+        os.path.join(get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py"),
+        launch_arguments=[("gz_args", ["-r -v 4 ", LaunchConfiguration("world")])],
     )
 
     ign_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         name="gz_bridge",
-        ros_arguments=["-p", f"config_file:={os.path.join(tracked_vehicle_simulation_path, 'config', 'ign_bridge.yaml')}"],
+        ros_arguments=[
+            "-p",
+            f"config_file:={os.path.join(tracked_vehicle_simulation_path, 'config', 'ign_bridge.yaml')}",
+        ],
         output="screen",
     )
 
     robot_localization_node = Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[
-            os.path.join(tracked_vehicle_simulation_path, 'config', 'ekf.yaml'),
-            {'use_sim_time' : True}
-        ]
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[os.path.join(tracked_vehicle_simulation_path, "config", "ekf.yaml"), {"use_sim_time": True}],
     )
 
     robot_state_publisher = Node(
@@ -55,9 +53,12 @@ def generate_launch_description():
         executable="robot_state_publisher",
         output="both",
         parameters=[
-            {'robot_description': load_robot_description(os.path.join(tracked_vehicle_simulation_path, 'models', 'tracked.sdf'))},
-            {'use_sim_time' : True}
-
+            {
+                "robot_description": load_robot_description(
+                    os.path.join(tracked_vehicle_simulation_path, "models", "tracked.sdf")
+                )
+            },
+            {"use_sim_time": True},
         ],
     )
 
@@ -73,7 +74,7 @@ def generate_launch_description():
         package="rviz2",
         executable="rviz2",
         name="rviz2",
-        arguments=["-d", os.path.join(tracked_vehicle_simulation_path, 'rviz', 'tracked.rviz')],
+        arguments=["-d", os.path.join(tracked_vehicle_simulation_path, "rviz", "tracked.rviz")],
         output="screen",
     )
 
@@ -93,5 +94,6 @@ def generate_launch_description():
             robot_state_publisher,
             gazebo_spawn_robot,
             rviz2,
-            tracks_controller
-        ])
+            tracks_controller,
+        ]
+    )
