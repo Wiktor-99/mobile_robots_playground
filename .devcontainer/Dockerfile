@@ -34,7 +34,7 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
     ros-$ROS_DISTRO-nav2-rviz-plugins \
-    ros-$ROS_DISTRO-sdformat-urdf &&\
+    ros-$ROS_DISTRO-sdformat-urdf && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
