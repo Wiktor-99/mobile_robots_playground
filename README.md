@@ -1,5 +1,7 @@
 # Mobile robots playground
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 Repo contains experiments with mobile robots.
 Currently repo contains:
 * Nav 2 support
