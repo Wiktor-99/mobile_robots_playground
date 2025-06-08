@@ -29,6 +29,10 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     bash-completion \
     libg2o-dev \
     libpcl-dev \
+    python3-opencv \
+    ros-$ROS_DISTRO-cv-bridge \
+    ros-$ROS_DISTRO-image-tools \
+    ros-$ROS_DISTRO-message-filters \
     ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
     ros-$ROS_DISTRO-xacro \
     ros-$ROS_DISTRO-ros2-control-cmake \
