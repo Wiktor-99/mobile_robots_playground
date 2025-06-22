@@ -18,13 +18,8 @@ class CamerasNode(Node):
             CameraInfo, '/left_camera/camera_info', self.store_left_camera_info, 10)
         self.right_camera_info_sub = self.create_subscription(
             CameraInfo, '/right_camera/camera_info', self.store_right_camera_info, 10)
-        self.cam = self.create_subscription(
-            Image, '/left_camera/image_raw', self.img_callback, 10)
         self.left_camera_info: CameraInfo = None
         self.right_camera_info: CameraInfo = None
-
-    def img_callback(self, img):
-        pass
 
     def store_left_camera_info(self, camera_info_msg: CameraInfo):
         self.left_camera_info = camera_info_msg
@@ -70,12 +65,7 @@ class CamerasNode(Node):
         k_left, _, t_left = self.decompose_projection_matrix(self.left_camera_info.p)
 
         depth_image = self.calc_depth_map(disparity, k_left, t_left, np.array([0.3, 0, 0]))
-        ros_img = self.cv_bridge.cv2_to_imgmsg(disparity)
-
-
-        self.get_logger().info("XXX")
-        self.depth_image_pub.publish(ros_img)
-
+        self.depth_image_pub.publish(self.cv_bridge.cv2_to_imgmsg(depth_image, encoding="32FC1"))
 
     def calculate_disparity(self, left_image, right_image):
         sad_window = 6
@@ -89,9 +79,9 @@ class CamerasNode(Node):
                                         P2 = 32 * 1 * block_size ** 2,
                                         mode=cv2.STEREO_SGBM_MODE_SGBM_3WAY)
 
-        disparity_left = matcher.compute(left_image, right_image).astype(np.float32)
+        disparity_left = matcher.compute(left_image, right_image)
 
-        return disparity_left
+        return disparity_left.astype(np.float32)
 
 
     def decompose_projection_matrix(self, projection_matrix):
@@ -111,10 +101,10 @@ class CamerasNode(Node):
         disparity_left[disparity_left == 0.0] = 0.1
         disparity_left[disparity_left == -1.0] = 0.1
 
-
         depth_map = np.ones(disparity_left.shape)
         depth_map = f * b / disparity_left
-        return depth_map
+
+        return depth_map.astype(np.float32)
 
 def main(args=None):
     rclpy.init(args=args)
