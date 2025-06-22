@@ -38,8 +38,6 @@ RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrin
     ros-$ROS_DISTRO-ros2-control-cmake \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-robot-localization \
-    ros-$ROS_DISTRO-ros-gz \
-    ros-$ROS_DISTRO-ros-gz-bridge \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-libg2o \
     ros-$ROS_DISTRO-slam-toolbox \
@@ -57,12 +55,16 @@ RUN python3 -m pip install numpy  --break-system-packages
 
 ENV OptiX_INSTALL_DIR=/optix
 ENV NVIDIA_DRIVER_CAPABILITIES=all
+ENV GZ_VERSION=harmonic
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    mkdir -p /gz_ros2_control_ws/src && \
-    cd /gz_ros2_control_ws/src && \
+    mkdir -p /ros2_deps_ws/src && \
+    cd /ros2_deps_ws/src && \
+    git clone https://github.com/gazebosim/ros_gz.git -b ros2 && \
     git clone --branch $ROS_DISTRO https://github.com/ros-controls/gz_ros2_control && \
     git clone https://github.com/dfki-ric/pclomp.git && \
-    cd /gz_ros2_control_ws && \
+    cd /ros2_deps_ws && \
+    apt update && rosdep update && \
+    rosdep install -r --from-paths src -i -y --rosdistro $ROS_DISTRO && \
     colcon build
 ENV DEBIAN_FRONTEND=dialog
 
@@ -70,4 +72,4 @@ ARG WORKSPACE
 RUN echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
     && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
     && echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> //home/$USERNAME/.bashrc \
-    && echo "if [ -f /gz_ros2_control_ws/install/setup.bash ]; then source /gz_ros2_control_ws/install/setup.bash; fi" >> //home/$USERNAME/.bashrc
+    && echo "if [ -f /ros2_deps_ws/install/setup.bash ]; then source /ros2_deps_ws/install/setup.bash; fi" >> //home/$USERNAME/.bashrc
