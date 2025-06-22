@@ -201,13 +201,13 @@
     <joint name="right_camera_joint" type="fixed">
         <parent link="imu_link" />
         <child link="right_camera_link" />
-        <origin xyz="0.1 -0.15 0.2" rpy="${-pi/2} 0 ${-pi/2}"/>
+        <origin xyz="0.1 -0.15 0.2" rpy="0 0 0"/>
     </joint>
 
     <joint name="left_camera_joint" type="fixed">
         <parent link="imu_link" />
         <child link="left_camera_link" />
-        <origin xyz="0.1 0.15 0.2" rpy="${-pi/2} 0 ${-pi/2}"/>
+        <origin xyz="0.1 0.15 0.2" rpy="0 0 0"/>
     </joint>
 
     <gazebo reference="imu_link">
@@ -322,7 +322,6 @@
     <gazebo reference="right_camera_link">
     <sensor name="right_camera" type="camera">
         <always_on>true</always_on>
-        <visualize>true</visualize>
         <update_rate>20</update_rate>
         <topic>right_camera/image_raw</topic>
         <gz_frame_id>right_camera_link</gz_frame_id>
@@ -338,7 +337,6 @@
     <gazebo reference="left_camera_link">
     <sensor name="left_camera" type="camera">
         <always_on>true</always_on>
-        <visualize>true</visualize>
         <update_rate>20</update_rate>
         <topic>left_camera/image_raw</topic>
         <gz_frame_id>left_camera_link</gz_frame_id>
