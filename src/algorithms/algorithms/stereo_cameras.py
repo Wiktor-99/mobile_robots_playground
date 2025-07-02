@@ -9,7 +9,8 @@ from rclpy.qos import qos_profile_sensor_data
 from message_filters import ApproximateTimeSynchronizer, Subscriber
 from geometry_msgs.msg import TransformStamped
 import tf2_ros
-from tf_transformations import quaternion_from_euler
+from tf_transformations import quaternion_from_matrix
+
 
 class CamerasNode(Node):
     def __init__(self):
@@ -116,7 +117,7 @@ class CamerasNode(Node):
         return filtered_match
 
 
-    def estimate_motion(self, match, kp1, kp2, k, depth, max_depth=60000):
+    def estimate_motion(self, match, kp1, kp2, k, depth, max_depth=3000):
         rmat = np.eye(3)
         tvec = np.zeros((3, 1))
 
@@ -163,21 +164,30 @@ class CamerasNode(Node):
 
         matches = self.filter_matches_distance(matches_unfilt, filter_match_distance)
 
+        R_convert = np.array([
+            [0,  0, 1],
+            [1,  0, 0],
+            [0, -1, 0]
+        ])
         rmat, tvec, img1_points, img2_points = self.estimate_motion(matches, kp0, kp1, k_left, self.depth_image)
-        r_y = np.array([
-            [ 0,  0,  -1,  0],
-            [ 0,  1,  0,  0],
-            [ 1,  0,  0,  0],
-            [ 0,  0,  0,  1]])
-
         Tmat = np.eye(4)
         Tmat[:3, :3] = rmat
         Tmat[:3, 3] = tvec.T
-        Tmat = Tmat
 
 
-        self.T_tot = self.T_tot.dot(np.linalg.inv(Tmat))
-        self.publish_transform(r_y @ self.T_tot)
+        R_convert = np.array([
+            [0,  0,  1],
+            [-1,  0,  0],
+            [0, -1,  0]
+        ])
+
+        T_convert = np.eye(4)
+        T_convert[:3, :3] = R_convert
+
+        T_ros = T_convert @ Tmat @ np.linalg.inv(T_convert)
+
+        self.T_tot =  self.T_tot.dot(np.linalg.inv(T_ros))
+        self.publish_transform(self.T_tot)
 
 
     def publish_transform(self, transformation):
@@ -189,7 +199,7 @@ class CamerasNode(Node):
         x = transformation[0, 3]
         y = transformation[1, 3]
 
-        q = quaternion_from_euler(0, 0, 0)
+        q = quaternion_from_matrix(transformation)
 
         t.transform.translation.x = x
         t.transform.translation.y = y
@@ -216,7 +226,7 @@ class CamerasNode(Node):
 
         disparity_left = matcher.compute(left_image, right_image)
 
-        return disparity_left.astype(np.float32)
+        return disparity_left.astype(np.float32) / 16
 
 
     def decompose_projection_matrix(self, projection_matrix):
