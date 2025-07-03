@@ -49,6 +49,12 @@ In the first terminal run:
 ros2 launch diffdrive_bringup diffdrive_bringup.launch.py use_lidar_slam:=True
 ```
 
+With nvidia (applies to all of the bringup command):
+
+```
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia ros2 launch diffdrive_bringup diffdrive_bringup.launch.py use_lidar_slam:=True
+```
+
 In the third terminal:
 ```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=True
@@ -78,5 +84,4 @@ ros2 launch tracked_vehicle_simulation tracked_vehicle_bringup.launch.py
 ```
 
 ## Tracked vehicle simulation
-
 ![Tracked vehicle simulation](/img/tracked.png " ")
