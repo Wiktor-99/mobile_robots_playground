@@ -8,6 +8,7 @@ Currently repo contains:
 * Simple Diff drive robot simulation with:
   * Lidar slam
   * RGLGazeboPlugin
+* Visual odometry
 * Tracked vehicle simulation
 
 
@@ -35,7 +36,7 @@ export GZ_GUI_PLUGIN_PATH=`pwd`/install/RGLGazeboPlugin/RGLVisualize:$GZ_GUI_PLU
 
 To start Nav 2 just run
 ``` bash
-ros2 launch diffdrive_bringup diffdrive_bringup.launch.py
+ros2 launch diffdrive_bringup diffdrive_bringup.launch.py use_nav2:=True
 ```
 
 ## Results of mapping with nav2
@@ -69,6 +70,18 @@ ros2 service call /map_save std_srvs/Empty
 
 ![Input point cloud from the RGLPlugin](/img/map_in_rviz.png " ") ![The map](/img/map_pcl.png " ")
 
+## Visual odometry
+
+Start simulation:
+```bash
+ros2 launch diffdrive_bringup diffdrive_bringup.launch.py
+```
+Then start the visual odom script:
+```bash
+python3 src/algorithms/algorithms/stereo_cameras.py
+```
+
+New frame `dom_vis` will be available.
 
 ## How to run tracked vehicle simulation
 
