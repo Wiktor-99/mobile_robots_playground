@@ -9,12 +9,15 @@ from rclpy.qos import qos_profile_sensor_data
 from message_filters import ApproximateTimeSynchronizer, Subscriber
 from geometry_msgs.msg import TransformStamped
 import tf2_ros
-from tf_transformations import quaternion_from_matrix
+from tf_transformations import (
+    quaternion_from_matrix,
+    translation_matrix,
+)
 
 
 class CamerasNode(Node):
     def __init__(self):
-        super().__init__("CamerasNode")
+        super().__init__("visual_odom")
         self.cv_bridge = CvBridge()
         self.initialize_sync_subscribers()
         self.depth_image_pub = self.create_publisher(Image, "stereo_depth_image", 1)
@@ -28,6 +31,8 @@ class CamerasNode(Node):
         self.left_camera_info: CameraInfo = None
         self.right_camera_info: CameraInfo = None
         self.left_image = None
+        self.t_tot = np.eye(4)
+        self.left_camera_to_base_link = translation_matrix([0.0, -0.15, -0.21])
 
     def store_left_camera_info(self, camera_info_msg: CameraInfo):
         self.left_camera_info = camera_info_msg
@@ -187,31 +192,35 @@ class CamerasNode(Node):
         T_convert[:3, :3] = R_convert
 
         T_ros = T_convert @ Tmat @ np.linalg.inv(T_convert)
-
-        self.T_tot = self.T_tot.dot(np.linalg.inv(T_ros))
-        self.publish_transform(self.T_tot)
+        T_base_link = (
+            np.linalg.inv(self.left_camera_to_base_link)
+            @ T_ros
+            @ self.left_camera_to_base_link
+        )
+        self.t_tot = self.t_tot.dot(np.linalg.inv(T_base_link))
+        self.publish_transform(self.t_tot)
 
     def publish_transform(self, transformation):
-        t = TransformStamped()
-        t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = "odom_vis"
-        t.child_frame_id = "base_link"
+        transform_msg = TransformStamped()
+        transform_msg.header.stamp = self.get_clock().now().to_msg()
+        transform_msg.header.frame_id = "visual_odom"
+        transform_msg.child_frame_id = "base_link"
 
         x = transformation[0, 3]
         y = transformation[1, 3]
 
         q = quaternion_from_matrix(transformation)
 
-        t.transform.translation.x = x
-        t.transform.translation.y = y
-        t.transform.translation.z = 0.0
+        transform_msg.transform.translation.x = x
+        transform_msg.transform.translation.y = y
+        transform_msg.transform.translation.z = 0.0
 
-        t.transform.rotation.x = q[0]
-        t.transform.rotation.y = q[1]
-        t.transform.rotation.z = q[2]
-        t.transform.rotation.w = q[3]
+        transform_msg.transform.rotation.x = q[0]
+        transform_msg.transform.rotation.y = q[1]
+        transform_msg.transform.rotation.z = q[2]
+        transform_msg.transform.rotation.w = q[3]
 
-        self.tf_broadcaster.sendTransform(t)
+        self.tf_broadcaster.sendTransform(transform_msg)
 
     def calculate_disparity(self, left_image, right_image):
         sad_window = 6
