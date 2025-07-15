@@ -186,8 +186,6 @@ class CamerasNode(Node):
         Tmat[:3, :3] = rmat
         Tmat[:3, 3] = tvec.T
 
-        R_convert = np.array([[0, 0, 1], [-1, 0, 0], [0, -1, 0]])
-
         T_convert = np.eye(4)
         T_convert[:3, :3] = R_convert
 
