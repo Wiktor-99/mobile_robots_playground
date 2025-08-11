@@ -6,11 +6,13 @@ import numpy as np
 import tf2_ros
 from tf_transformations import quaternion_from_euler
 
+
 class NDTScanMatcher(Node):
     def __init__(self):
-        super().__init__('ndt_scan_matcher')
+        super().__init__("ndt_scan_matcher")
         self.subscription = self.create_subscription(
-            LaserScan, '/scan', self.scan_callback, 10)
+            LaserScan, "/scan", self.scan_callback, 10
+        )
         self.tf_broadcaster = tf2_ros.TransformBroadcaster(self)
         self.previous_cloud = None
 
@@ -31,7 +33,9 @@ class NDTScanMatcher(Node):
             self.initialize_ndt_grid(current_cloud)
             return
 
-        transformation, converged = self.ndt_registration(self.previous_cloud, current_cloud)
+        transformation, converged = self.ndt_registration(
+            self.previous_cloud, current_cloud
+        )
 
         if converged:
             self.publish_transform(transformation)
@@ -41,9 +45,15 @@ class NDTScanMatcher(Node):
             self.get_logger().warn("NDT registration did not converge")
 
     def laser_scan_to_point_cloud(self, scan_msg):
-        angles = np.linspace(scan_msg.angle_min, scan_msg.angle_max, len(scan_msg.ranges))
+        angles = np.linspace(
+            scan_msg.angle_min, scan_msg.angle_max, len(scan_msg.ranges)
+        )
         ranges = np.array(scan_msg.ranges)
-        valid_indices = np.isfinite(ranges) & (ranges > scan_msg.range_min) & (ranges < scan_msg.range_max)
+        valid_indices = (
+            np.isfinite(ranges)
+            & (ranges > scan_msg.range_min)
+            & (ranges < scan_msg.range_max)
+        )
         points = np.zeros((np.count_nonzero(valid_indices), 2))
         points[:, 0] = ranges[valid_indices] * np.cos(angles[valid_indices])
         points[:, 1] = ranges[valid_indices] * np.sin(angles[valid_indices])
@@ -52,7 +62,10 @@ class NDTScanMatcher(Node):
     def initialize_ndt_grid(self, points):
         self.grid_cells = {}
         for point in points:
-            cell_idx = (int(point[0] / self.voxel_size), int(point[1] / self.voxel_size))
+            cell_idx = (
+                int(point[0] / self.voxel_size),
+                int(point[1] / self.voxel_size),
+            )
             if cell_idx not in self.grid_cells:
                 self.grid_cells[cell_idx] = []
             self.grid_cells[cell_idx].append(point)
@@ -73,10 +86,10 @@ class NDTScanMatcher(Node):
 
                 if det_cov > 0:
                     self.grid_cells[cell_idx] = {
-                        'mean': mean,
-                        'cov': cov,
-                        'inv_cov': inv_cov,
-                        'det_cov': det_cov
+                        "mean": mean,
+                        "cov": cov,
+                        "inv_cov": inv_cov,
+                        "det_cov": det_cov,
                     }
                 else:
                     del self.grid_cells[cell_idx]
@@ -93,15 +106,19 @@ class NDTScanMatcher(Node):
         converged = False
 
         for _ in range(max_iterations):
-            transformation = np.array([
-                [np.cos(theta), -np.sin(theta), x],
-                [np.sin(theta), np.cos(theta), y],
-                [0, 0, 1]
-            ])
+            transformation = np.array(
+                [
+                    [np.cos(theta), -np.sin(theta), x],
+                    [np.sin(theta), np.cos(theta), y],
+                    [0, 0, 1],
+                ]
+            )
 
             transformed_source = self.apply_transformation(source, transformation)
 
-            score, gradient, hessian = self.compute_ndt_score_and_derivatives(transformed_source)
+            score, gradient, hessian = self.compute_ndt_score_and_derivatives(
+                transformed_source
+            )
 
             if np.linalg.norm(gradient) < epsilon:
                 converged = True
@@ -119,11 +136,13 @@ class NDTScanMatcher(Node):
                 y += delta[1]
                 theta += delta[2]
 
-        transformation = np.array([
-            [np.cos(theta), -np.sin(theta), x],
-            [np.sin(theta), np.cos(theta), y],
-            [0, 0, 1]
-        ])
+        transformation = np.array(
+            [
+                [np.cos(theta), -np.sin(theta), x],
+                [np.sin(theta), np.cos(theta), y],
+                [0, 0, 1],
+            ]
+        )
 
         return transformation, converged
 
@@ -133,25 +152,29 @@ class NDTScanMatcher(Node):
         hessian = np.zeros((3, 3))
 
         for point in points:
-            cell_idx = (int(point[0] / self.voxel_size), int(point[1] / self.voxel_size))
+            cell_idx = (
+                int(point[0] / self.voxel_size),
+                int(point[1] / self.voxel_size),
+            )
             if cell_idx not in self.grid_cells:
                 continue
 
             cell = self.grid_cells[cell_idx]
-            diff = point - cell['mean']
-            exponent = -0.5 * diff.dot(cell['inv_cov']).dot(diff)
+            diff = point - cell["mean"]
+            exponent = -0.5 * diff.dot(cell["inv_cov"]).dot(diff)
             point_score = np.exp(exponent)
             score += point_score
 
             if point_score > 1e-6:
-                grad_point = point_score * cell['inv_cov'].dot(diff)
+                grad_point = point_score * cell["inv_cov"].dot(diff)
                 gradient[0] += grad_point[0]
                 gradient[1] += grad_point[1]
                 p_rot = np.array([-point[1], point[0]])
                 gradient[2] += grad_point.dot(p_rot)
 
-                H_point = point_score * (cell['inv_cov'] -
-                                         np.outer(grad_point, grad_point) / point_score)
+                H_point = point_score * (
+                    cell["inv_cov"] - np.outer(grad_point, grad_point) / point_score
+                )
 
                 hessian[:2, :2] += H_point
                 hessian[0, 2] += H_point[0, 0] * p_rot[0] + H_point[0, 1] * p_rot[1]
@@ -175,8 +198,8 @@ class NDTScanMatcher(Node):
     def publish_transform(self, transformation):
         t = TransformStamped()
         t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = 'map_scan'
-        t.child_frame_id = 'odom'
+        t.header.frame_id = "map_scan"
+        t.child_frame_id = "odom"
 
         x = transformation[0, 2]
         y = transformation[1, 2]
@@ -196,11 +219,13 @@ class NDTScanMatcher(Node):
 
         self.tf_broadcaster.sendTransform(t)
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = NDTScanMatcher()
     rclpy.spin(node)
     rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
